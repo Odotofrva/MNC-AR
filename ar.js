@@ -13,10 +13,51 @@ const fatal = (message) => {
 if (!exp) fatal('No AR experience was selected. Return to the gallery and choose an artwork.');
 
 document.getElementById('arTitle').textContent = exp?.title?.toUpperCase() || 'AR SCAN';
-document.getElementById('targetImage').src = exp?.demoTargetImage || '';
+document.getElementById('targetImage').src = exp?.demoTargetImage || exp?.artwork || '';
 document.getElementById('exitBtn').addEventListener('click', () => location.href = 'index.html');
 document.getElementById('helpBtn').addEventListener('click', () => document.getElementById('targetModal').hidden = false);
 document.getElementById('targetClose').addEventListener('click', () => document.getElementById('targetModal').hidden = true);
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Could not load target image: ${src}`));
+    img.src = src;
+  });
+}
+
+async function compileTargetFromImage(src, onProgress) {
+  const Compiler = window.MINDAR?.IMAGE?.Compiler || window.MINDAR?.Compiler;
+  if (!Compiler) throw new Error('MindAR target compiler failed to load. Check your internet connection and reload.');
+
+  const img = await loadImage(src);
+  const compiler = new Compiler();
+  await compiler.compileImageTargets([img], progress => onProgress?.(progress));
+  const exportedBuffer = await compiler.exportData();
+  const blob = new Blob([exportedBuffer], { type: 'application/octet-stream' });
+  return URL.createObjectURL(blob);
+}
+
+async function resolveTargetSource(statusLabel, statusTitle, statusHelp) {
+  if (exp.targetMode !== 'runtime') return exp.target;
+
+  const progressWrap = document.getElementById('compileProgress');
+  const progressBar = document.getElementById('compileProgressBar');
+  progressWrap.hidden = false;
+  statusLabel.textContent = 'PREPARING TARGET';
+  statusTitle.textContent = 'Learning this artwork';
+  statusHelp.textContent = 'The first scan may take a moment while the image target is prepared in your browser.';
+
+  const url = await compileTargetFromImage(exp.targetSourceImage || exp.artwork, progress => {
+    const pct = Math.max(0, Math.min(100, Number(progress) || 0));
+    progressBar.style.width = `${pct}%`;
+    statusLabel.textContent = `PREPARING TARGET · ${pct.toFixed(0)}%`;
+  });
+  progressBar.style.width = '100%';
+  setTimeout(() => { progressWrap.hidden = true; }, 350);
+  return url;
+}
 
 async function start() {
   if (!exp) return;
@@ -28,20 +69,22 @@ async function start() {
   const statusLabel = document.getElementById('statusLabel');
   const statusTitle = document.getElementById('statusTitle');
   const statusHelp = document.getElementById('statusHelp');
+  let compiledTargetUrl = null;
 
   try {
     statusLabel.textContent = 'CAMERA PERMISSION';
     statusTitle.textContent = 'Allow camera access';
     statusHelp.textContent = 'Your camera feed stays in the browser and is used to recognize the selected artwork.';
 
-    // Explicit permission request so the user sees a clear camera prompt at scan time.
     const preflight = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
     preflight.getTracks().forEach(t => t.stop());
+
+    compiledTargetUrl = await resolveTargetSource(statusLabel, statusTitle, statusHelp);
 
     const root = document.getElementById('arRoot');
     const mindarThree = new MindARThree({
       container: root,
-      imageTargetSrc: exp.target,
+      imageTargetSrc: compiledTargetUrl,
       maxTrack: 1,
       filterMinCF: 0.0001,
       filterBeta: 0.001
@@ -98,9 +141,11 @@ async function start() {
     document.getElementById('exitBtn').addEventListener('click', async () => {
       renderer.setAnimationLoop(null);
       try { mindarThree.stop(); } catch {}
+      if (compiledTargetUrl?.startsWith('blob:')) URL.revokeObjectURL(compiledTargetUrl);
     }, { once:true });
   } catch (err) {
     console.error(err);
+    if (compiledTargetUrl?.startsWith('blob:')) URL.revokeObjectURL(compiledTargetUrl);
     const reason = err?.name === 'NotAllowedError'
       ? 'Camera permission was denied. Enable camera access for this site and try again.'
       : `Could not start the AR scanner: ${err?.message || 'Unknown error'}`;

@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#000000" />
   <title>MENOCLONE AR Scanner</title>
   <link rel="stylesheet" href="ar.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
   <script type="importmap">
   {
     "imports": {
@@ -30,6 +31,7 @@
     <p id="statusLabel">STARTING CAMERA</p>
     <h1 id="statusTitle">Preparing your experience…</h1>
     <p id="statusHelp">Camera permission is required for image tracking.</p>
+    <div id="compileProgress" class="compile-progress" hidden><div id="compileProgressBar"></div></div>
   </section>
 
   <button id="helpBtn" class="help-btn">TARGET</button>
