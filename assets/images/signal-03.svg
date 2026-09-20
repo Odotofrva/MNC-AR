@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+<rect width="1200" height="900" fill="#0a0a0a"/>
+<circle cx="600" cy="410" r="250" fill="none" stroke="#9ca3af" stroke-width="3" opacity=".75"/>
+<circle cx="600" cy="410" r="160" fill="none" stroke="#9ca3af" stroke-width="1" opacity=".35"/>
+<path d="M330 410h540M600 140v540" stroke="#9ca3af" stroke-width="1" opacity=".2"/>
+<ellipse cx="600" cy="410" rx="150" ry="68" fill="#9ca3af" opacity=".9"/>
+<ellipse cx="600" cy="373" rx="75" ry="45" fill="#0a0a0a" stroke="#9ca3af" stroke-width="4"/>
+<circle cx="560" cy="410" r="10" fill="#0a0a0a"/><circle cx="600" cy="410" r="10" fill="#0a0a0a"/><circle cx="640" cy="410" r="10" fill="#0a0a0a"/>
+<text x="600" y="755" fill="#f4f3ef" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="64" letter-spacing="-2">ORIGINS</text>
+<text x="600" y="810" fill="#9ca3af" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="20" letter-spacing="8">SIGNAL 03</text>
+</svg>
