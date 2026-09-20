@@ -11,25 +11,37 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+
   <div id="splash" class="splash" aria-hidden="false">
-    <div class="signal-mark">M</div>
-    <h1>MENOCLONE AR</h1>
+    <div class="splash-pulse" aria-hidden="true"></div>
+    <img class="splash-logo" src="assets/images/brand-logo.png" alt="MENOCLONE" />
     <p>SCAN THE SIGNAL</p>
+    <div class="splash-loader"><i></i></div>
   </div>
 
   <header class="topbar">
-    <a class="brand" href="#">MENOCLONE <span>AR</span></a>
-    <button class="icon-btn" id="aboutBtn" aria-label="About this app">?</button>
+    <div class="topbar-side topbar-left"><span class="live-dot"></span><span>AR</span></div>
+    <a class="brand-logo" href="#" aria-label="MENOCLONE AR home">
+      <img src="assets/images/brand-logo.png" alt="MENOCLONE" />
+    </a>
+    <div class="topbar-side topbar-actions">
+      <button class="icon-btn sound-btn" id="soundBtn" aria-label="Toggle interface sounds" title="Toggle sound">♪</button>
+      <button class="icon-btn" id="aboutBtn" aria-label="About this app">?</button>
+    </div>
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero reveal">
       <p class="eyebrow">WEB AR EXPERIENCE</p>
       <h2>Select an artwork.<br>Scan it. Unlock the experience.</h2>
       <p class="hero-copy">Each artwork marker launches a different 3D experience directly in the browser. No app-store install required.</p>
+      <div class="hero-signal" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
-    <section class="gallery-wrap">
+    <section class="gallery-wrap reveal">
       <div class="section-row">
         <div>
           <p class="eyebrow">AVAILABLE SIGNALS</p>
@@ -40,13 +52,13 @@
       <div id="gallery" class="gallery" aria-live="polite"></div>
     </section>
 
-    <section class="how-it-works">
+    <section class="how-it-works reveal">
       <p class="eyebrow">HOW IT WORKS</p>
       <div class="steps">
         <div><span>01</span><h4>Choose</h4><p>Select the artwork you want to activate.</p></div>
-        <div><span>02</span><h4>Allow camera</h4><p>Camera access is requested only when you start scanning MENOCLONE products.</p></div>
-        <div><span>03</span><h4>Scan</h4><p>Point your phone at the matching printed or displayed MENOCLONE design</p></div>
-        <div><span>04</span><h4>Experience</h4><p>The associated MENOCLONE model appears..</p></div>
+        <div><span>02</span><h4>Allow camera</h4><p>Camera access is requested only when you start scanning.</p></div>
+        <div><span>03</span><h4>Scan</h4><p>Point your phone at the matching printed or displayed design.</p></div>
+        <div><span>04</span><h4>Experience</h4><p>The associated GLB appears anchored to the artwork.</p></div>
       </div>
     </section>
   </main>
@@ -55,7 +67,7 @@
     <div class="modal-backdrop" data-close-modal></div>
     <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
       <button class="modal-close" data-close-modal aria-label="Close">×</button>
-      <div class="detail-image-wrap"><img id="detailImage" alt="Selected artwork" /></div>
+      <div class="detail-image-wrap"><img id="detailImage" alt="Selected artwork" /><div class="image-scanline"></div></div>
       <div class="detail-content">
         <p class="eyebrow" id="detailCode"></p>
         <h3 id="detailTitle"></h3>
@@ -64,7 +76,7 @@
           <div><span>MODEL</span><strong>.GLB</strong></div>
           <div><span>MODE</span><strong>IMAGE TRACKED AR</strong></div>
         </div>
-        <button id="scanBtn" class="primary-btn">SCAN THIS DESIGN</button>
+        <button id="scanBtn" class="primary-btn"><span>SCAN THIS DESIGN</span><b>↗</b></button>
       </div>
     </article>
   </div>

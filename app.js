@@ -1,94 +1,18 @@
-const experiences = [
-  {
-    id: 'menoclone-wordmark',
-    title: 'MENOCLONE Wordmark',
-    subtitle: 'Scan the MENOCLONE design',
-    description: 'Point your camera at the MENOCLONE wordmark to unlock its augmented-reality experience.',
-    artwork: './assets/images/menoclone-wordmark.png',
-    model: './assets/models/signal-01.glb',
-    targetMode: 'runtime',
-    targetSourceImage: './assets/images/menoclone-wordmark.png',
-    demoTargetImage: './assets/images/menoclone-wordmark.png',
-    modelScale: 0.55,
-    modelY: 0.05,
-    modelZ: 0.05
-  },
-  {
-    id: 'mnc-ufo',
-    title: 'MNC UFO',
-    subtitle: 'Scan the UFO design',
-    description: 'Point your camera at the MNC UFO artwork to unlock its augmented-reality experience.',
-    artwork: './assets/images/mnc-ufo.png',
-    model: './assets/models/signal-03.glb',
-    targetMode: 'runtime',
-    targetSourceImage: './assets/images/mnc-ufo.png',
-    demoTargetImage: './assets/images/mnc-ufo.png',
-    modelScale: 0.5,
-    modelY: 0.05,
-    modelZ: 0.06
-  }
+const experiences=[
+{id:'menoclone-wordmark',title:'MENOCLONE Wordmark',subtitle:'Scan the MENOCLONE design',description:'Point your camera at the MENOCLONE wordmark to unlock its augmented-reality experience.',artwork:'./assets/images/menoclone-wordmark.png',model:'./assets/models/signal-01.glb',targetMode:'runtime',targetSourceImage:'./assets/images/menoclone-wordmark.png',demoTargetImage:'./assets/images/menoclone-wordmark.png',modelScale:.55,modelY:.05,modelZ:.05},
+{id:'mnc-ufo',title:'MNC UFO',subtitle:'Scan the UFO design',description:'Point your camera at the MNC UFO artwork to unlock its augmented-reality experience.',artwork:'./assets/images/mnc-ufo.png',model:'./assets/models/signal-03.glb',targetMode:'runtime',targetSourceImage:'./assets/images/mnc-ufo.png',demoTargetImage:'./assets/images/mnc-ufo.png',modelScale:.5,modelY:.05,modelZ:.06}
 ];
-
-const $ = (s) => document.querySelector(s);
-const gallery = $('#gallery');
-const detailModal = $('#detailModal');
-const aboutModal = $('#aboutModal');
-let selected = null;
-
-$('#experienceCount').textContent = `${experiences.length} EXPERIENCES`;
-
-gallery.innerHTML = experiences.map((exp, i) => `
-  <article class="art-card" data-index="${i}" tabindex="0" role="button" aria-label="Open ${exp.title}">
-    <img src="${exp.artwork}" alt="${exp.title} artwork preview" />
-    <footer>
-      <div><h4>${exp.title}</h4><p>${exp.subtitle}</p></div>
-      <div class="card-arrow">↗</div>
-    </footer>
-  </article>`).join('');
-
-function openDetail(index) {
-  selected = experiences[index];
-  $('#detailImage').src = selected.artwork;
-  $('#detailTitle').textContent = selected.title;
-  $('#detailCode').textContent = selected.id.toUpperCase();
-  $('#detailDescription').textContent = selected.description;
-  detailModal.classList.add('open');
-  detailModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-}
-function closeDetail() {
-  detailModal.classList.remove('open');
-  detailModal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-
-gallery.addEventListener('click', e => {
-  const card = e.target.closest('.art-card');
-  if (card) openDetail(Number(card.dataset.index));
-});
-gallery.addEventListener('keydown', e => {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.art-card')) {
-    e.preventDefault();
-    openDetail(Number(e.target.closest('.art-card').dataset.index));
-  }
-});
-
-document.querySelectorAll('[data-close-modal]').forEach(el => el.addEventListener('click', closeDetail));
-$('#aboutBtn').addEventListener('click', () => {
-  aboutModal.classList.add('open');
-  aboutModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-});
-document.querySelectorAll('[data-close-about]').forEach(el => el.addEventListener('click', () => {
-  aboutModal.classList.remove('open');
-  aboutModal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}));
-
-$('#scanBtn').addEventListener('click', () => {
-  if (!selected) return;
-  const payload = encodeURIComponent(JSON.stringify(selected));
-  window.location.href = `ar.html?experience=${payload}`;
-});
-
-window.addEventListener('load', () => setTimeout(() => $('#splash').classList.add('hidden'), 1350));
+const $=s=>document.querySelector(s),gallery=$('#gallery'),detailModal=$('#detailModal'),aboutModal=$('#aboutModal');let selected=null,soundEnabled=true,audioCtx=null;
+function audio(){if(!soundEnabled)return null;audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
+function tone(freq=440,duration=.08,type='sine',gain=.035,delay=0){const c=audio();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,c.currentTime+delay);g.gain.setValueAtTime(0,c.currentTime+delay);g.gain.linearRampToValueAtTime(gain,c.currentTime+delay+.008);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+delay+duration);o.connect(g).connect(c.destination);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+duration+.02)}
+const sfx={tap(){tone(540,.055,'sine',.025);tone(760,.05,'sine',.018,.035)},open(){tone(260,.09,'triangle',.025);tone(520,.13,'sine',.02,.04)},scan(){tone(330,.08,'square',.018);tone(660,.1,'sine',.022,.08);tone(990,.14,'sine',.018,.16)},close(){tone(240,.07,'sine',.018)}};
+$('#experienceCount').textContent=`${experiences.length} EXPERIENCES`;
+gallery.innerHTML=experiences.map((exp,i)=>`<article class="art-card" data-index="${i}" tabindex="0" role="button" aria-label="Open ${exp.title}"><img src="${exp.artwork}" alt="${exp.title} artwork preview"/><footer><div><h4>${exp.title}</h4><p>${exp.subtitle}</p></div><div class="card-arrow">↗</div></footer></article>`).join('');
+function openDetail(index){selected=experiences[index];$('#detailImage').src=selected.artwork;$('#detailTitle').textContent=selected.title;$('#detailCode').textContent=selected.id.toUpperCase();$('#detailDescription').textContent=selected.description;detailModal.classList.add('open');detailModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';sfx.open()}
+function closeDetail(){detailModal.classList.remove('open');detailModal.setAttribute('aria-hidden','true');document.body.style.overflow='';sfx.close()}
+gallery.addEventListener('click',e=>{const card=e.target.closest('.art-card');if(card)openDetail(Number(card.dataset.index))});gallery.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('.art-card')){e.preventDefault();openDetail(Number(e.target.closest('.art-card').dataset.index))}});
+document.querySelectorAll('[data-close-modal]').forEach(el=>el.addEventListener('click',closeDetail));$('#aboutBtn').addEventListener('click',()=>{sfx.tap();aboutModal.classList.add('open');aboutModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'});document.querySelectorAll('[data-close-about]').forEach(el=>el.addEventListener('click',()=>{aboutModal.classList.remove('open');aboutModal.setAttribute('aria-hidden','true');document.body.style.overflow='';sfx.close()}));
+$('#soundBtn').addEventListener('click',e=>{soundEnabled=!soundEnabled;e.currentTarget.classList.toggle('muted',!soundEnabled);e.currentTarget.textContent=soundEnabled?'♪':'×';e.currentTarget.setAttribute('aria-label',soundEnabled?'Mute interface sounds':'Enable interface sounds');if(soundEnabled)sfx.open()});
+$('#scanBtn').addEventListener('click',()=>{if(!selected)return;sfx.scan();const payload=encodeURIComponent(JSON.stringify(selected));setTimeout(()=>window.location.href=`ar.html?experience=${payload}`,240)});
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button,.art-card,.brand-logo')&&!e.target.closest('#scanBtn,#soundBtn'))sfx.tap()},{passive:true});
+window.addEventListener('load',()=>setTimeout(()=>$('#splash').classList.add('hidden'),1450));

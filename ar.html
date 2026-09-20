@@ -1,57 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
-  <title>MENOCLONE AR Scanner</title>
-  <link rel="stylesheet" href="ar.css" />
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-      "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
-    }
-  }
-  </script>
-</head>
-<body>
-  <div id="arRoot"></div>
-
-  <header class="ar-top">
-    <div><span class="live-dot"></span><strong id="arTitle">AR SCAN</strong></div>
-    <button id="exitBtn">EXIT</button>
-  </header>
-
-  <div class="scan-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-
-  <section id="statusPanel" class="status-panel">
-    <p id="statusLabel">STARTING CAMERA</p>
-    <h1 id="statusTitle">Preparing your experience…</h1>
-    <p id="statusHelp">Camera permission is required for image tracking.</p>
-    <div id="compileProgress" class="compile-progress" hidden><div id="compileProgressBar"></div></div>
-  </section>
-
-  <button id="helpBtn" class="help-btn">TARGET</button>
-
-  <div id="targetModal" class="target-modal" hidden>
-    <div class="target-card">
-      <button id="targetClose">×</button>
-      <p class="kicker">DEMO TARGET</p>
-      <h2>Point the camera at this image.</h2>
-      <img id="targetImage" alt="Image target used for this AR demo" />
-      <p>For production, each artwork gets its own compiled <code>.mind</code> target file.</p>
-    </div>
-  </div>
-
-  <div id="fatal" class="fatal" hidden>
-    <h2>AR could not start</h2>
-    <p id="fatalMessage"></p>
-    <button onclick="location.href='index.html'">RETURN TO GALLERY</button>
-  </div>
-
-  <script type="module" src="ar.js"></script>
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><meta name="theme-color" content="#000000"/><title>MENOCLONE AR Scanner</title><link rel="stylesheet" href="ar.css"/><script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/","mindar-image":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js","mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"}}</script></head><body>
+<div id="arRoot"></div><div id="foundFlash" class="found-flash" aria-hidden="true"></div>
+<header class="ar-top"><div class="ar-brand"><img src="assets/images/brand-logo.png" alt="MENOCLONE"/></div><div class="ar-actions"><span class="scan-state"><span class="live-dot"></span><strong id="arTitle">AR SCAN</strong></span><button id="soundBtn" aria-label="Toggle sound">♪</button><button id="exitBtn">EXIT</button></div></header>
+<div class="scan-frame" aria-hidden="true"><div class="sweep"></div><i></i><i></i><i></i><i></i><div class="reticle"></div></div>
+<section id="statusPanel" class="status-panel"><p id="statusLabel">STARTING CAMERA</p><h1 id="statusTitle">Preparing your experience…</h1><p id="statusHelp">Camera permission is required for image tracking.</p><div id="compileProgress" class="compile-progress" hidden><div id="compileProgressBar"></div></div></section>
+<button id="helpBtn" class="help-btn">TARGET</button>
+<div id="targetModal" class="target-modal" hidden><div class="target-card"><button id="targetClose">×</button><p class="kicker">DEMO TARGET</p><h2>Point the camera at this image.</h2><img id="targetImage" alt="Image target used for this AR demo"/><p>For production, each artwork gets its own compiled <code>.mind</code> target file.</p></div></div>
+<div id="fatal" class="fatal" hidden><h2>AR could not start</h2><p id="fatalMessage"></p><button onclick="location.href='index.html'">RETURN TO GALLERY</button></div><script type="module" src="ar.js?v=2"></script></body></html>
